@@ -1,0 +1,190 @@
+.admin-container {
+  padding: 40px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.admin-container h2 {
+  font-family: var(--font-primary);
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: var(--color-accent);
+  text-align: center;
+}
+
+.agendamentos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.agendamento-card {
+  background-color: var(--color-button);
+  padding: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.agendamento-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.agendamento-card.removing {
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.3s ease-out;
+}
+
+.agendamento-content {
+  transition: all 0.3s ease;
+}
+
+.agendamento-card.active .agendamento-content {
+  margin-bottom: 15px;
+}
+
+.agendamento-info {
+  font-family: var(--font-secondary);
+  font-size: 1rem;
+  color: var(--color-text-primary);
+}
+
+.agendamento-info strong {
+  color: var(--color-accent);
+}
+
+.agendamento-actions {
+  display: flex;
+  justify-content: flex-end;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.agendamento-actions.hidden {
+  max-height: 0;
+}
+
+.agendamento-actions:not(.hidden) {
+  max-height: 100px;
+}
+
+.btn-cancelar {
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-family: var(--font-secondary);
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.btn-cancelar:hover {
+  background-color: #cc0000;
+  transform: translateY(-2px);
+}
+
+
+/* Estilos existentes... */
+
+/* Novo conteúdo para o bloco de agenda */
+.hidden {
+  display: none;
+}
+
+.bloquear-agenda-container {
+  background-color: var(--color-button);
+  padding: 25px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-sm);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.bloquear-agenda-container .form-group {
+  margin-bottom: 20px;
+}
+
+.bloquear-agenda-container label {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--font-primary);
+  color: var(--color-text-primary);
+}
+
+.bloquear-agenda-container input {
+  width: 100%;
+  padding: 12px 15px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--color-text-primary);
+  font-family: var(--font-secondary);
+}
+
+#btn-bloquear {
+  background: linear-gradient(135deg, #ff4444, #cc0000);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 30px;
+  font-family: var(--font-primary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 10px;
+  width: 100%;
+}
+
+#btn-bloquear:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255, 68, 68, 0.4);
+}
+
+.bloqueios-lista {
+  margin-top: 30px;
+}
+
+.bloqueio-item {
+  background-color: rgba(255, 68, 68, 0.1);
+  padding: 15px;
+  border-radius: var(--border-radius);
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 4px solid #ff4444;
+}
+
+.bloqueio-data {
+  font-family: var(--font-primary);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.bloqueio-motivo {
+  font-family: var(--font-secondary);
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+}
+
+.btn-desbloquear {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-text-secondary);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-desbloquear:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}

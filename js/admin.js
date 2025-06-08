@@ -218,12 +218,18 @@ function bloquearData() {
   }
 
   // Verifica se a data já está bloqueada
-  db.ref('datasBloqueadas').orderByChild('data').equalTo(data).once('value')
-    .then(snapshot => {
-      if (snapshot.exists()) {
-        alert("Esta data já está bloqueada.");
-        return;
-      }
+  const verificarDataBloqueada = (data) => {
+    return database.ref('datasBloqueadas').once('value')
+        .then(snapshot => {
+            let bloqueada = false;
+            snapshot.forEach(child => {
+                if (child.val().data === data) {
+                    bloqueada = true;
+                }
+            });
+            return bloqueada;
+        });
+};
 
       // Adiciona a nova data bloqueada
       const novoBloqueio = {

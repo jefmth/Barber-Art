@@ -1,16 +1,22 @@
-.logo-container {
-    display: flex;
-    align-items: center;
+/* admin.css - Versão completa e corrigida */
+
+:root {
+  --color-primary: #0A0A0A;
+  --color-secondary: #1E1E1E;
+  --color-accent: #D4AF37;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #E0E0E0;
+  --color-button: #2A2A2A;
+  --font-primary: 'Montserrat', sans-serif;
+  --font-secondary: 'Roboto', sans-serif;
+  --transition: all 0.3s ease;
+  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.2);
+  --border-radius: 12px;
 }
 
-.logo-container h1 {
-    font-family: var(--font-primary);
-    font-weight: 700;
-    font-size: 2.5rem;
-    color: var(--color-text-primary);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
+/* Container principal */
 .admin-container {
   padding: 40px 20px;
   max-width: 1000px;
@@ -26,6 +32,7 @@
   text-align: center;
 }
 
+/* Lista de agendamentos */
 .agendamentos-lista {
   display: flex;
   flex-direction: column;
@@ -57,14 +64,11 @@
   transition: all 0.3s ease;
 }
 
-.agendamento-card.active .agendamento-content {
-  margin-bottom: 15px;
-}
-
 .agendamento-info {
   font-family: var(--font-secondary);
   font-size: 1rem;
   color: var(--color-text-primary);
+  margin-bottom: 8px;
 }
 
 .agendamento-info strong {
@@ -85,6 +89,7 @@
 
 .agendamento-actions:not(.hidden) {
   max-height: 100px;
+  margin-top: 15px;
 }
 
 .btn-cancelar {
@@ -104,10 +109,7 @@
   transform: translateY(-2px);
 }
 
-
-/* Estilos existentes... */
-
-/* Novo conteúdo para o bloco de agenda */
+/* Seção de bloqueio de agenda */
 .hidden {
   display: none;
 }
@@ -161,6 +163,7 @@
   box-shadow: 0 6px 18px rgba(255, 68, 68, 0.4);
 }
 
+/* Lista de datas bloqueadas */
 .bloqueios-lista {
   margin-top: 30px;
 }
@@ -174,6 +177,12 @@
   justify-content: space-between;
   align-items: center;
   border-left: 4px solid #ff4444;
+  transition: var(--transition);
+}
+
+.bloqueio-item.removing {
+  transform: translateX(100%);
+  opacity: 0;
 }
 
 .bloqueio-data {
@@ -186,18 +195,28 @@
   font-family: var(--font-secondary);
   color: var(--color-text-secondary);
   font-size: 0.9rem;
+  display: block;
+  margin-top: 5px;
 }
 
 .btn-desbloquear {
   background-color: rgba(255, 255, 255, 0.1);
   color: var(--color-text-secondary);
   border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
+  padding: 8px 16px;
+  border-radius: var(--border-radius);
   cursor: pointer;
   transition: var(--transition);
+  font-family: var(--font-secondary);
 }
 
 .btn-desbloquear:hover {
   background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

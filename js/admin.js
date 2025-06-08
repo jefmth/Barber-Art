@@ -1,4 +1,4 @@
-// admin.js - Painel administrativo completo
+// admin.js - Versão completa e corrigida
 
 const firebaseConfig = {
   apiKey: "AIzaSyBfCW88cgIuY5uLcMyd8v9EeP8Fn3j6OPY",
@@ -14,254 +14,246 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 document.addEventListener('DOMContentLoaded', () => {
-  const agendamentosContent = document.getElementById('agendamentos-content');
+  // Elementos do DOM
+  const container = document.getElementById('lista-agendamentos');
   const agendaContent = document.getElementById('agenda-content');
+  const dataBloqueioInput = document.getElementById('data-bloqueio');
+  const motivoBloqueioInput = document.getElementById('motivo-bloqueio');
+  const btnBloquear = document.getElementById('btn-bloquear');
+  const listaBloqueios = document.getElementById('lista-bloqueios');
   const navLinks = document.querySelectorAll('.nav-link');
   
   // Configura a data mínima para o datepicker (hoje)
-  document.getElementById('data-bloqueio').min = new Date().toISOString().split('T')[0];
-  
-  // Navegação entre abas
-  navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const target = e.target.getAttribute('href').substring(1);
-      
-      navLinks.forEach(l => l.classList.remove('active'));
-      e.target.classList.add('active');
-      
-      if (target === 'agendamentos') {
-        agendamentosContent.classList.remove('hidden');
-        agendaContent.classList.add('hidden');
-        carregarAgendamentos();
-      } else if (target === 'agenda') {
-        agendamentosContent.classList.add('hidden');
-        agendaContent.classList.remove('hidden');
-        carregarDatasBloqueadas();
-      }
-    });
-  });
-  
-  // Inicia com a aba de agendamentos
-  document.querySelector('.nav-link[href="#agendamentos"]').click();
-  
-  // Configura o botão de bloquear data
-  document.getElementById('btn-bloquear').addEventListener('click', bloquearData);
-});
-
-function carregarAgendamentos() {
-  const container = document.getElementById('lista-agendamentos');
   const hoje = new Date().toISOString().split('T')[0];
+  if (dataBloqueioInput) dataBloqueioInput.min = hoje;
 
-  db.ref('agendamentos').orderByChild('data').equalTo(hoje).once('value')
-    .then(snapshot => {
-      container.innerHTML = ''; // limpa conteúdo inicial
+  // Função para formatar data
+  const formatarData = (dataISO) => {
+    const data = new Date(dataISO);
+    return data.toLocaleDateString('pt-BR', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
 
-      if (!snapshot.exists()) {
-        container.innerHTML = '<p>Nenhum agendamento para hoje.</p>';
-        return;
-      }
+  // Função para carregar agendamentos
+  const carregarAgendamentos = () => {
+    if (!container) return;
+    
+    container.innerHTML = '<p>Carregando agendamentos...</p>';
+    
+    db.ref('agendamentos').orderByChild('data').equalTo(hoje).once('value')
+      .then(snapshot => {
+        container.innerHTML = '';
 
-      // Coletar todos agendamentos em um array
-      const agendamentos = [];
-      snapshot.forEach(child => {
-        agendamentos.push({
-          key: child.key,
-          ...child.val()
-        });
-      });
-
-      // Ordenar por horário (formato HH:MM)
-      agendamentos.sort((a, b) => {
-        const [horaA, minutoA] = a.horario.split(':').map(Number);
-        const [horaB, minutoB] = b.horario.split(':').map(Number);
-        
-        if (horaA === horaB) {
-          return minutoA - minutoB;
+        if (!snapshot.exists()) {
+          container.innerHTML = '<p>Nenhum agendamento para hoje.</p>';
+          return;
         }
-        return horaA - horaB;
-      });
 
-      // Exibir agendamentos ordenados
-      agendamentos.forEach(agendamento => {
-        const card = document.createElement('div');
-        card.className = 'agendamento-card';
-        card.dataset.key = agendamento.key;
-
-        card.innerHTML = `
-          <div class="agendamento-content">
-            <p class="agendamento-info"><strong>Cliente:</strong> ${agendamento.nome}</p>
-            <p class="agendamento-info"><strong>Serviço:</strong> ${agendamento.servico}</p>
-            <p class="agendamento-info"><strong>Horário:</strong> ${agendamento.horario}</p>
-            <p class="agendamento-info"><strong>Telefone:</strong> ${agendamento.telefone}</p>
-          </div>
-          <div class="agendamento-actions hidden">
-            <button class="btn-cancelar">Cancelar Horário</button>
-          </div>
-        `;
-
-        card.addEventListener('click', (e) => {
-          if (e.target.classList.contains('btn-cancelar')) {
-            e.stopPropagation();
-            return;
-          }
-          
-          const actions = card.querySelector('.agendamento-actions');
-          actions.classList.toggle('hidden');
+        const agendamentos = [];
+        snapshot.forEach(child => {
+          agendamentos.push({
+            key: child.key,
+            ...child.val()
+          });
         });
 
-        const btnCancelar = card.querySelector('.btn-cancelar');
-        btnCancelar.addEventListener('click', () => {
-          if (confirm(`Deseja realmente cancelar o horário de ${agendamento.nome} às ${agendamento.horario}?`)) {
-            db.ref(`agendamentos/${agendamento.key}`).remove()
-              .then(() => {
-                card.classList.add('removing');
-                setTimeout(() => {
-                  card.remove();
-                  if (container.children.length === 0) {
+        // Ordenar por horário
+        agendamentos.sort((a, b) => {
+          const [horaA, minutoA] = a.horario.split(':').map(Number);
+          const [horaB, minutoB] = b.horario.split(':').map(Number);
+          return horaA - horaB || minutoA - minutoB;
+        });
+
+        // Exibir agendamentos
+        agendamentos.forEach(agendamento => {
+          const card = document.createElement('div');
+          card.className = 'agendamento-card';
+          card.dataset.key = agendamento.key;
+
+          card.innerHTML = `
+            <div class="agendamento-content">
+              <p class="agendamento-info"><strong>Cliente:</strong> ${agendamento.nome}</p>
+              <p class="agendamento-info"><strong>Serviço:</strong> ${agendamento.servico}</p>
+              <p class="agendamento-info"><strong>Horário:</strong> ${agendamento.horario}</p>
+              <p class="agendamento-info"><strong>Telefone:</strong> ${agendamento.telefone}</p>
+            </div>
+            <div class="agendamento-actions hidden">
+              <button class="btn-cancelar">Cancelar Horário</button>
+            </div>
+          `;
+
+          // Eventos do card
+          card.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn-cancelar')) return;
+            card.querySelector('.agendamento-actions').classList.toggle('hidden');
+          });
+
+          card.querySelector('.btn-cancelar').addEventListener('click', () => {
+            if (confirm(`Cancelar agendamento de ${agendamento.nome} às ${agendamento.horario}?`)) {
+              db.ref(`agendamentos/${agendamento.key}`).remove()
+                .then(() => {
+                  card.classList.add('removing');
+                  setTimeout(() => card.remove(), 300);
+                  if (!container.children.length) {
                     container.innerHTML = '<p>Nenhum agendamento para hoje.</p>';
                   }
-                }, 300);
-              })
-              .catch(err => {
-                console.error("Erro ao cancelar agendamento:", err);
-                alert("Ocorreu um erro ao cancelar o agendamento.");
-              });
-          }
+                })
+                .catch(err => {
+                  console.error("Erro ao cancelar:", err);
+                  alert("Erro ao cancelar agendamento.");
+                });
+            }
+          });
+
+          container.appendChild(card);
+        });
+      })
+      .catch(err => {
+        console.error("Erro ao carregar agendamentos:", err);
+        container.innerHTML = '<p>Erro ao carregar agendamentos.</p>';
+      });
+  };
+
+  // Função para carregar datas bloqueadas
+  const carregarDatasBloqueadas = () => {
+    if (!listaBloqueios) return;
+    
+    listaBloqueios.innerHTML = '<p>Carregando datas bloqueadas...</p>';
+    
+    db.ref('datasBloqueadas').once('value')
+      .then(snapshot => {
+        listaBloqueios.innerHTML = '';
+
+        if (!snapshot.exists()) {
+          listaBloqueios.innerHTML = '<p>Nenhuma data bloqueada.</p>';
+          return;
+        }
+
+        const bloqueios = [];
+        snapshot.forEach(child => {
+          bloqueios.push({
+            key: child.key,
+            ...child.val()
+          });
         });
 
-        container.appendChild(card);
-      });
-    })
-    .catch(err => {
-      console.error("Erro ao carregar agendamentos:", err);
-      container.innerHTML = "<p>Erro ao carregar dados.</p>";
-    });
-}
+        // Ordenar por data (mais recente primeiro)
+        bloqueios.sort((a, b) => new Date(b.data) - new Date(a.data));
 
-function carregarDatasBloqueadas() {
-  const container = document.getElementById('lista-bloqueios');
-  
-  db.ref('datasBloqueadas').once('value')
-    .then(snapshot => {
-      container.innerHTML = ''; // limpa conteúdo inicial
+        // Exibir cada bloqueio
+        bloqueios.forEach(bloqueio => {
+          const item = document.createElement('div');
+          item.className = 'bloqueio-item';
+          item.dataset.key = bloqueio.key;
 
-      if (!snapshot.exists()) {
-        container.innerHTML = '<p>Nenhuma data bloqueada.</p>';
-        return;
-      }
+          item.innerHTML = `
+            <div>
+              <span class="bloqueio-data">${formatarData(bloqueio.data)}</span>
+              ${bloqueio.motivo ? `<span class="bloqueio-motivo">${bloqueio.motivo}</span>` : ''}
+            </div>
+            <button class="btn-desbloquear">Desbloquear</button>
+          `;
 
-      // Converter para array e ordenar por data
-      const bloqueios = [];
-      snapshot.forEach(child => {
-        bloqueios.push({
-          key: child.key,
-          ...child.val()
-        });
-      });
-
-      // Ordenar por data (mais recente primeiro)
-      bloqueios.sort((a, b) => new Date(a.data) - new Date(b.data));
-
-      // Exibir datas bloqueadas
-      bloqueios.forEach(bloqueio => {
-        const item = document.createElement('div');
-        item.className = 'bloqueio-item';
-        item.dataset.key = bloqueio.key;
-
-        item.innerHTML = `
-          <div>
-            <span class="bloqueio-data">${formatarData(bloqueio.data)}</span>
-            ${bloqueio.motivo ? `<span class="bloqueio-motivo">${bloqueio.motivo}</span>` : ''}
-          </div>
-          <button class="btn-desbloquear">Desbloquear</button>
-        `;
-
-        const btnDesbloquear = item.querySelector('.btn-desbloquear');
-        btnDesbloquear.addEventListener('click', () => {
-          if (confirm(`Deseja desbloquear a data ${formatarData(bloqueio.data)}?`)) {
-            db.ref(`datasBloqueadas/${bloqueio.key}`).remove()
-              .then(() => {
-                item.classList.add('removing');
-                setTimeout(() => {
-                  item.remove();
-                  if (container.children.length === 0) {
-                    container.innerHTML = '<p>Nenhuma data bloqueada.</p>';
+          item.querySelector('.btn-desbloquear').addEventListener('click', () => {
+            if (confirm(`Desbloquear a data ${formatarData(bloqueio.data)}?`)) {
+              db.ref(`datasBloqueadas/${bloqueio.key}`).remove()
+                .then(() => {
+                  item.classList.add('removing');
+                  setTimeout(() => item.remove(), 300);
+                  if (!listaBloqueios.children.length) {
+                    listaBloqueios.innerHTML = '<p>Nenhuma data bloqueada.</p>';
                   }
-                }, 300);
-              })
-              .catch(err => {
-                console.error("Erro ao desbloquear data:", err);
-                alert("Ocorreu um erro ao desbloquear a data.");
-              });
-          }
+                })
+                .catch(err => {
+                  console.error("Erro ao desbloquear:", err);
+                  alert("Erro ao desbloquear data.");
+                });
+            }
+          });
+
+          listaBloqueios.appendChild(item);
         });
-
-        container.appendChild(item);
+      })
+      .catch(err => {
+        console.error("Erro ao carregar bloqueios:", err);
+        listaBloqueios.innerHTML = '<p>Erro ao carregar datas bloqueadas.</p>';
       });
-    })
-    .catch(err => {
-      console.error("Erro ao carregar datas bloqueadas:", err);
-      container.innerHTML = "<p>Erro ao carregar dados.</p>";
+  };
+
+  // Função para bloquear data
+  const bloquearData = () => {
+    const data = dataBloqueioInput.value;
+    const motivo = motivoBloqueioInput ? motivoBloqueioInput.value.trim() : null;
+
+    if (!data) {
+      alert("Selecione uma data.");
+      return;
+    }
+
+    db.ref('datasBloqueadas').orderByChild('data').equalTo(data).once('value')
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          alert("Data já bloqueada.");
+          return;
+        }
+
+        const novoBloqueio = {
+          data: data,
+          motivo: motivo,
+          dataBloqueio: new Date().toISOString()
+        };
+
+        return db.ref('datasBloqueadas').push(novoBloqueio);
+      })
+      .then(() => {
+        alert(`Data ${formatarData(data)} bloqueada!`);
+        dataBloqueioInput.value = '';
+        if (motivoBloqueioInput) motivoBloqueioInput.value = '';
+        carregarDatasBloqueadas();
+      })
+      .catch(err => {
+        console.error("Erro ao bloquear:", err);
+        alert("Erro ao bloquear data.");
+      });
+  };
+
+  // Eventos
+  if (btnBloquear) btnBloquear.addEventListener('click', bloquearData);
+
+  // Navegação entre abas
+  if (navLinks.length) {
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = e.target.getAttribute('href').substring(1);
+        
+        navLinks.forEach(l => l.classList.remove('active'));
+        e.target.classList.add('active');
+        
+        if (target === 'agendamentos') {
+          if (agendaContent) agendaContent.classList.add('hidden');
+          if (container) {
+            container.classList.remove('hidden');
+            carregarAgendamentos();
+          }
+        } else if (target === 'agenda') {
+          if (container) container.classList.add('hidden');
+          if (agendaContent) {
+            agendaContent.classList.remove('hidden');
+            carregarDatasBloqueadas();
+          }
+        }
+      });
     });
-}
-
-function bloquearData() {
-  const dataInput = document.getElementById('data-bloqueio');
-  const motivoInput = document.getElementById('motivo-bloqueio');
-  const data = dataInput.value;
-  const motivo = motivoInput.value.trim();
-
-  if (!data) {
-    alert("Por favor, selecione uma data.");
-    return;
+    
+    // Inicia na aba de agendamentos
+    document.querySelector('.nav-link[href="#agendamentos"]')?.click();
   }
 
-  // Verifica se a data já está bloqueada
-  const verificarDataBloqueada = (data) => {
-    return database.ref('datasBloqueadas').once('value')
-        .then(snapshot => {
-            let bloqueada = false;
-            snapshot.forEach(child => {
-                if (child.val().data === data) {
-                    bloqueada = true;
-                }
-            });
-            return bloqueada;
-        });
-};
-
-      // Adiciona a nova data bloqueada
-      const novoBloqueio = {
-        data: data,
-        motivo: motivo || null,
-        dataBloqueio: new Date().toISOString()
-      };
-
-      db.ref('datasBloqueadas').push(novoBloqueio)
-        .then(() => {
-          alert(`Data ${formatarData(data)} bloqueada com sucesso!`);
-          dataInput.value = '';
-          motivoInput.value = '';
-          carregarDatasBloqueadas();
-        })
-        .catch(err => {
-          console.error("Erro ao bloquear data:", err);
-          alert("Ocorreu um erro ao bloquear a data.");
-        });
-    })
-    .catch(err => {
-      console.error("Erro ao verificar datas bloqueadas:", err);
-      alert("Ocorreu um erro ao verificar as datas bloqueadas.");
-    });
-}
-
-function formatarData(dataISO) {
-  const data = new Date(dataISO);
-  return data.toLocaleDateString('pt-BR', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
-}
+  // Inicializações
+  carregarAgendamentos();
+});

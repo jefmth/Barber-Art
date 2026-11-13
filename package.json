@@ -15,6 +15,7 @@
     "@capacitor/android": "^7.4.3",
     "@capacitor/core": "^7.4.3",
     "@capacitor/local-notifications": "^7.0.7",
+    "@capacitor/status-bar": "^7.0.6",
     "firebase": "^12.5.0"
   },
   "devDependencies": {

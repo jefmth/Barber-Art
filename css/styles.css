@@ -1,5 +1,6 @@
 /* Estilos Globais */
 :root {
+    color-scheme: dark;
     --color-primary: #0A0A0A;
     --color-secondary: #1E1E1E;
     --color-accent: #D4AF37;
@@ -28,6 +29,7 @@ body {
     line-height: 1.6;
     overflow-x: hidden;
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
 }
@@ -259,8 +261,15 @@ body {
 }
 
 @media (max-width: 767px) {
+    .header {
+        height: 64px;
+        padding-inline: 12px;
+    }
+
     .logo-container h1 {
-        font-size: 2rem;
+        font-size: clamp(1.35rem, 7vw, 2rem);
+        letter-spacing: 0.06em;
+        white-space: nowrap;
     }
     
     .nav-menu {
@@ -302,6 +311,25 @@ body {
     
     .services-container {
         padding: 20px 10px;
+    }
+}
+
+@media (max-width: 380px) {
+    .header {
+        height: 58px;
+    }
+
+    .logo-container h1 {
+        font-size: clamp(1.2rem, 6.8vw, 1.55rem);
+        letter-spacing: 0.04em;
+    }
+
+    .services-container {
+        padding-inline: 8px;
+    }
+
+    .service-card {
+        padding: 18px 14px;
     }
 }
 

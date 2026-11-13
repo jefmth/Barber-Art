@@ -1,6 +1,7 @@
 import { Capacitor } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import { auth, database } from './firebase-config.js';
+import { appointmentDateKey, normalizeAppointmentDate } from './admin-date-utils.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const appointmentList = document.getElementById('lista-agendamentos');
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let bootstrapping = true;
   let notifications = loadNotifications();
   let androidNotificationsReady = Promise.resolve();
+  let appointmentRenderVersion = 0;
 
   function localDateISO(date) {
     const year = date.getFullYear();
@@ -34,8 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function formatDate(value, options = {}) {
     if (!value) return 'Data não informada';
-    const [year, month, day] = value.split('-').map(Number);
-    if (!year || !month || !day) return value;
+    const normalized = normalizeAppointmentDate(value);
+    if (!normalized) return String(value);
+    const [year, month, day] = normalized.split('-').map(Number);
     return new Date(year, month - 1, day).toLocaleDateString('pt-BR', options);
   }
 
@@ -151,20 +154,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderAppointments() {
     if (!appointmentList) return;
+    const renderVersion = ++appointmentRenderVersion;
+    const selectedDate = appointmentDate.value || today;
     appointmentList.replaceChildren();
     appointmentList.textContent = 'Carregando agendamentos...';
-    database.ref('agendamentos').orderByChild('data').equalTo(appointmentDate.value || today).once('value')
+    database.ref('agendamentos').once('value')
       .then((snapshot) => {
+        if (renderVersion !== appointmentRenderVersion) return;
         appointmentList.replaceChildren();
-        if (!snapshot.exists()) {
+        const appointments = [];
+        snapshot.forEach((child) => {
+          const value = child.val();
+          if (!value || typeof value !== 'object' || appointmentDateKey(value) !== selectedDate) return;
+          appointments.push({ key: child.key, ...value });
+        });
+        if (!appointments.length) {
           const empty = document.createElement('p');
           empty.className = 'empty-state';
           empty.textContent = 'Nenhum agendamento nesta data.';
           appointmentList.appendChild(empty);
           return;
         }
-        const appointments = [];
-        snapshot.forEach((child) => appointments.push({ key: child.key, ...child.val() }));
         appointments.sort((a, b) => (a.horario || '').localeCompare(b.horario || ''));
         appointments.forEach((appointment) => {
           const card = document.createElement('article');
@@ -197,6 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       })
       .catch((error) => {
+        if (renderVersion !== appointmentRenderVersion) return;
         console.error('Erro ao carregar agendamentos:', error);
         appointmentList.replaceChildren();
         const message = document.createElement('p');

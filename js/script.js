@@ -1,25 +1,4 @@
-// Barber Web - Script JavaScript Completo com Firebase (Atualizado para bloqueio de datas)
-
-// Configuração do Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyBfCW88cgIuY5uLcMyd8v9EeP8Fn3j6OPY",
-  authDomain: "tipo-de-ocorrencias.firebaseapp.com",
-  databaseURL: "https://tipo-de-ocorrencias-default-rtdb.firebaseio.com",
-  projectId: "tipo-de-ocorrencias",
-  storageBucket: "tipo-de-ocorrencias.appspot.com",
-  messagingSenderId: "66249122861",
-  appId: "1:66249122861:web:6749d0fe402337d60e44a4"
-};
-
-// Inicializa o Firebase
-try {
-  firebase.initializeApp(firebaseConfig);
-} catch (err) {
-  if (!/already exists/.test(err.message)) {
-    console.error('Firebase initialization error', err.stack);
-  }
-}
-const database = firebase.database();
+import { database, firebase } from './firebase-config.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     // Elementos do DOM
@@ -122,7 +101,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('servicoTipo').value = `${serviceName} - ${servicePrice}`;
         document.getElementById('servicoPreco').value = servicePrice;
         
-        const today = new Date().toISOString().split('T')[0];
+        const now = new Date();
+        const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         dataInput.min = today;
         dataInput.value = today;
         

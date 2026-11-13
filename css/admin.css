@@ -7,8 +7,8 @@
   --color-text-primary: #FFFFFF;
   --color-text-secondary: #E0E0E0;
   --color-button: #2A2A2A;
-  --font-primary: 'Montserrat', sans-serif;
-  --font-secondary: 'Roboto', sans-serif;
+  --font-primary: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-secondary: system-ui, -apple-system, 'Segoe UI', sans-serif;
   --transition: all 0.3s ease;
   --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.15);
@@ -219,4 +219,42 @@
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* Navegação e notificações no app Android */
+.admin-header { height: auto; min-height: 70px; padding: 10px 18px; }
+.admin-header-inner { width: min(100%, 1000px); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.admin-header-inner .logo-container h1 { font-size: 1.2rem; }
+.btn-logout, .btn-secondary { border: 1px solid rgba(212,175,55,.55); border-radius: 10px; padding: 9px 14px; color: var(--color-accent); background: transparent; font: 600 .9rem var(--font-secondary); cursor: pointer; }
+.admin-container { width: 100%; padding: 24px 16px calc(32px + env(safe-area-inset-bottom)); }
+.admin-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+.admin-section-heading h2 { margin: 0; text-align: left; }
+.eyebrow { color: var(--color-accent); font-size: .7rem; letter-spacing: .14em; font-weight: 700; margin-bottom: 5px; }
+.date-filter { min-width: 150px; margin: 0; }
+.date-filter label { display: block; margin-bottom: 5px; color: var(--color-text-secondary); font-size: .85rem; }
+.date-filter input { max-width: 180px; padding: 10px; border: 1px solid rgba(255,255,255,.17); border-radius: 9px; color: var(--color-text-primary); background: var(--color-button); }
+.agendamento-actions { max-height: none; overflow: visible; margin-top: 12px; }
+.agendamento-actions:not(.hidden) { max-height: none; }
+.notification-count { display: inline-flex; min-width: 20px; height: 20px; justify-content: center; align-items: center; margin-left: 5px; padding: 0 5px; border-radius: 999px; color: #111; background: var(--color-accent); font-size: .72rem; font-weight: 800; }
+.notification-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: end; }
+.notification-note { margin: -8px 0 16px; color: var(--color-text-secondary); font-size: .9rem; }
+.notifications-list { display: flex; flex-direction: column; gap: 12px; }
+.notification-card { padding: 16px; border-radius: var(--border-radius); background: var(--color-button); border-left: 4px solid rgba(255,255,255,.2); box-shadow: var(--shadow-sm); }
+.notification-card.unread { border-left-color: var(--color-accent); }
+.notification-card strong { color: var(--color-accent); }
+.notification-card p { margin: 5px 0; color: var(--color-text-primary); }
+.notification-card time, .empty-state { color: var(--color-text-secondary); font-size: .88rem; }
+.empty-state { padding: 18px; background: rgba(255,255,255,.04); border-radius: 10px; }
+.admin-toast { position: fixed; z-index: 1000; left: 16px; right: 16px; top: calc(82px + env(safe-area-inset-top)); padding: 14px 16px; border: 1px solid rgba(212,175,55,.65); border-radius: 12px; background: #202020; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,.4); opacity: 0; transform: translateY(-10px); pointer-events: none; transition: .22s ease; }
+.admin-toast.visible { opacity: 1; transform: translateY(0); }
+@media (max-width: 560px) {
+  .admin-nav .nav-menu { gap: 6px; }
+  .admin-nav .nav-link { padding: 12px 10px; font-size: .88rem; }
+  .admin-section-heading { align-items: start; flex-direction: column; }
+  .admin-section-heading h2 { margin-bottom: 0; }
+  .notification-actions { justify-content: start; }
+  .notification-actions button { padding: 8px 10px; font-size: .8rem; }
+  .date-filter, .date-filter input { width: 100%; max-width: none; }
+  .bloqueio-item { gap: 10px; align-items: start; }
 }

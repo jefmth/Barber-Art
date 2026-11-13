@@ -5,15 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barber Art</title>
     <link rel="stylesheet" href="css/styles.css">
-    <!-- Fontes do Google -->
-	<!-- Adicione isso no <head> do seu index.html -->
-	<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- Ícones -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <header class="header">
@@ -33,7 +24,7 @@
         <div class="service-grid">
             <div class="service-card" id="classico">
                 <div class="service-icon">
-                    <i class="fas fa-cut"></i>
+                    <span aria-hidden="true">✂</span>
                 </div>
                 <h2 class="service-title">Clássico</h2>
                 <p class="service-description">Corte tradicional com acabamento perfeito</p>
@@ -42,7 +33,7 @@
 
             <div class="service-card" id="degrade">
                 <div class="service-icon">
-                    <i class="fas fa-ruler-vertical"></i>
+                    <span aria-hidden="true">▥</span>
                 </div>
                 <h2 class="service-title">Degradê</h2>
                 <p class="service-description">Transição suave com técnica moderna</p>
@@ -51,7 +42,7 @@
 
             <div class="service-card" id="barba">
                 <div class="service-icon">
-                    <i class="fas fa-user-tie"></i>
+                    <span aria-hidden="true">♙</span>
                 </div>
                 <h2 class="service-title">Barba</h2>
                 <p class="service-description">Modelagem e hidratação completa</p>
@@ -60,7 +51,7 @@
 
             <div class="service-card" id="maquina">
                 <div class="service-icon">
-                    <i class="fas fa-bolt"></i>
+                    <span aria-hidden="true">⚡</span>
                 </div>
                 <h2 class="service-title">Máquina</h2>
                 <p class="service-description">Corte rápido com máquina</p>
@@ -79,7 +70,7 @@
             <div class="modal-header">
                 <h3>Agendar Serviço</h3>
                 <button class="modal-close" id="closeModal">
-                    <i class="fas fa-times"></i>
+                    <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
@@ -133,7 +124,7 @@
             <div class="modal-header">
                 <h3>Acesso Administrativo</h3>
                 <button class="modal-close" id="closeLoginModal">
-                    <i class="fas fa-times"></i>
+                    <span aria-hidden="true">×</span>
                 </button>
             </div>
             <div class="modal-body">
@@ -155,8 +146,7 @@
         </div>
     </div>
 
-    <script src="js/script.js"></script>
+    <script type="module" src="js/script.js"></script>
     <script type="module" src="js/login.js"></script>
 </body>
 </html>
-

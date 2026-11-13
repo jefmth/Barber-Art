@@ -1,0 +1,8 @@
+{
+  "appId": "br.com.barberart.app",
+  "appName": "Barber Art",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}

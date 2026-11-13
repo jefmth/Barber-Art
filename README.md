@@ -1,80 +1,70 @@
-# Barber Web - Página Responsiva para Barbearia
+# Barber Art — aplicativo Android de teste
 
-## Descrição
-Este projeto consiste em uma página web responsiva para uma barbearia, com design moderno de 2025. A página inclui uma barra superior preta com o nome "Barber Web", um menu de navegação com opções "Cliente" e "Admin", e quatro botões grandes para os serviços oferecidos: Clássico (R$ 30), Degradê (R$ 35), Barba (R$ 35) e Máquina (R$ 20). Ao clicar em qualquer serviço, um modal de agendamento é aberto para que o cliente possa preencher seus dados e agendar o serviço.
+O projeto transforma a interface web existente em um aplicativo Android instalável usando Capacitor. As telas, estilos, lógica do app e SDK do Firebase são compilados dentro do pacote. A conexão de rede permanece necessária para autenticação e leitura/gravação no Firebase Realtime Database já configurado.
 
-## Características
-- Design moderno e elegante com tema escuro
-- Totalmente responsivo para qualquer dispositivo
-- Animações e efeitos interativos
-- Estrutura de arquivos organizada
-- Código limpo e bem comentado
-- Modal de agendamento para cada serviço
-- Formulário de agendamento com validação de campos
-- Máscara para campo de telefone
+## Funcionalidades desta etapa
 
-## Estrutura de Arquivos
-```
-barber_web/
-├── index.html          # Arquivo HTML principal
-├── css/
-│   └── styles.css      # Estilos CSS
-├── js/
-│   └── script.js       # Funcionalidades JavaScript
-└── img/                # Diretório para imagens (vazio)
+- Agendamento de serviços e bloqueio de datas usando os caminhos existentes `agendamentos` e `datasBloqueadas`.
+- Painel administrativo com autenticação Firebase, consulta por data, cancelamento e bloqueios.
+- Notificações no painel e notificações Android locais para novos agendamentos e cancelamentos enquanto o administrador está conectado e com o app ativo.
+- Histórico local de até 30 notificações, guardado no dispositivo administrativo; nenhum nó de notificação foi adicionado ao banco.
+- Assets web e SDK Firebase empacotados localmente; fontes e ícones não são baixados de CDNs.
+
+## Requisitos
+
+- Node.js e npm para preparar e compilar o frontend.
+- Android Studio, JDK e Android SDK para compilar, instalar ou depurar o aplicativo Android.
+
+## Preparação e execução
+
+```bash
+npm install
+npm run dev
 ```
 
-## Tecnologias Utilizadas
-- HTML5
-- CSS3 (com variáveis CSS, flexbox, grid e media queries)
-- JavaScript (ES6+)
-- Font Awesome (para ícones)
-- Google Fonts (Montserrat e Roboto)
+Para compilar os recursos locais e sincronizá-los com a plataforma Android:
 
-## Recursos de Design
-- Neomorfismo sutil nos botões
-- Efeitos de glassmorphism no menu
-- Animações de entrada e interação
-- Efeito de ripple nos botões
-- Modo escuro como padrão (tendência de 2025)
+```bash
+npm run android:sync
+```
 
-## Como Usar
-1. Faça o download dos arquivos
-2. Extraia o conteúdo em um diretório
-3. Abra o arquivo `index.html` em qualquer navegador moderno
-4. Clique em um dos serviços para abrir o modal de agendamento
-5. Preencha os dados solicitados e confirme o agendamento
+Para abrir o projeto no Android Studio:
 
-## Funcionalidade de Agendamento
-- Ao clicar em qualquer serviço, um modal é aberto automaticamente
-- O tipo de serviço selecionado é preenchido automaticamente no formulário
-- O formulário solicita nome, celular, data e horário do agendamento
-- Todos os campos são validados antes do envio
-- O campo de celular possui máscara para formatação automática
-- Após confirmar, uma mensagem de sucesso é exibida
-- O modal pode ser fechado clicando no botão de fechar, no botão cancelar ou fora do modal
+```bash
+npm run android:open
+```
 
-## Personalização
-- Para alterar as cores, modifique as variáveis CSS no início do arquivo `styles.css`
-- Para adicionar ou modificar serviços, edite a seção correspondente no arquivo `index.html`
-- Para alterar comportamentos interativos, modifique o arquivo `script.js`
+No Android Studio, selecione uma configuração de debug e gere o APK de teste. Também é possível compilar por linha de comando, com Android SDK instalado e configurado:
 
-## Compatibilidade
-- Chrome (versão 90+)
-- Firefox (versão 88+)
-- Safari (versão 14+)
-- Edge (versão 90+)
-- Opera (versão 76+)
-- Dispositivos móveis Android e iOS
+```bash
+cd android
+./gradlew assembleDebug
+```
 
-## Próximos Passos
-- Implementar as áreas de Cliente e Admin
-- Integrar com backend para persistência dos agendamentos
-- Implementar sistema de gerenciamento de clientes
-- Adicionar galeria de fotos dos cortes
-- Implementar sistema de notificações para confirmação de agendamentos
+O APK de debug fica em `android/app/build/outputs/apk/debug/app-debug.apk` após a compilação bem-sucedida.
 
----
+## Firebase e preservação de dados
 
-© 2025 Barber Web - Todos os direitos reservados
+A configuração cliente está centralizada em `js/firebase-config.js`. Ela aponta para o Firebase Realtime Database atualmente presente no projeto. Esta etapa não migra, limpa ou renomeia registros e não cria outro banco. Os formatos dos dados em `agendamentos` e `datasBloqueadas` permanecem inalterados.
 
+A configuração cliente contém uma chave de identificação pública do Firebase, não uma chave de serviço. A proteção dos registros depende das Firebase Realtime Database Rules e da autenticação. A inclusão de uma verificação de login no painel não substitui regras de segurança no servidor; revise-as antes de disponibilizar o app publicamente.
+
+## Limite das notificações
+
+A notificação Android local é gerada quando o app administrativo recebe em tempo real uma alteração no nó de agendamentos. O app precisa estar aberto/ativo, autenticado e conectado para detectar o evento. Se o app estiver fechado ou desconectado, esta versão não promete entrega. Notificação push confiável em segundo plano exigirá Firebase Cloud Messaging e um backend seguro (por exemplo, Cloud Functions) para encaminhar os eventos de agendamento e cancelamento; isso ainda não foi configurado.
+
+As notificações e a marcação de leitura são guardadas somente no armazenamento local do dispositivo do administrador, sem alterar a estrutura existente do Realtime Database.
+
+## Estrutura principal
+
+- `index.html`: experiência do cliente e login administrativo.
+- `admin.html`: painel administrativo Android.
+- `js/firebase-config.js`: inicialização única e local do Firebase.
+- `js/script.js`, `js/login.js`, `js/admin.js`: fluxos do cliente, autenticação e administração.
+- `css/`: estilos da aplicação.
+- `android/`: projeto nativo Android gerado pelo Capacitor.
+- `vite.config.js`: build das páginas para `dist/`.
+
+## Geração automática do APK
+
+O workflow `.github/workflows/build-android.yml` compila um APK de debug em runners Android do GitHub Actions quando alterações chegam à branch principal ou a uma branch `manus/**`. Após a execução, baixe `barber-art-android-debug` na seção **Actions** do repositório. O workflow também pode ser acionado manualmente em **Actions → Android debug APK → Run workflow**.

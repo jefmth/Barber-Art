@@ -10,18 +10,22 @@
 <body>
     <header class="header">
         <div class="logo-container">
-            <h1>Barber Art</h1>
+            <h1>BARBER <span class="brand-accent">ART</span></h1>
         </div>
+        <a class="admin-link" href="#admin" aria-label="Acesso administrativo">Admin</a>
     </header>
 
-    <nav class="main-nav">
-        <ul class="nav-menu">
-            <!--<li class="nav-item"><a href="#cliente" class="nav-link">Cliente</a></li>-->
-            <li class="nav-item"><a href="#admin" class="nav-link">Admin</a></li>
-        </ul>
-    </nav>
+    <section class="premium-hero" aria-labelledby="hero-title">
+        <p class="hero-eyebrow">Barbearia · desde sempre</p>
+        <h2 id="hero-title">Seu estilo começa na cadeira.</h2>
+        <p class="hero-subtitle">Técnica precisa. Acabamento impecável.</p>
+    </section>
 
     <main class="services-container">
+        <div class="services-heading">
+            <h2>Escolha seu serviço</h2>
+            <span>04 opções</span>
+        </div>
         <div class="service-grid">
             <div class="service-card" id="classico">
                 <div class="service-icon">
@@ -59,6 +63,7 @@
                 <div class="service-price">R$ 20,00</div>
             </div>
         </div>
+        <p class="service-hint">Toque em um serviço para iniciar o agendamento</p>
     </main>
 
     <footer class="footer">

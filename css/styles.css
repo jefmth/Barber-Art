@@ -631,3 +631,309 @@ select option {
     border-color: var(--color-accent);
     box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
 }
+
+
+/* Tema aplicado: Noir Premium (mantém classes e interações existentes) */
+:root {
+    --color-primary: #090909;
+    --color-secondary: #090909;
+    --color-accent: #D4AF37;
+    --color-text-primary: #F8F7F3;
+    --color-text-secondary: #A7A7A7;
+    --color-button: #171717;
+}
+
+body {
+    background: #090909;
+}
+
+.header {
+    height: auto;
+    min-height: 68px;
+    padding: 13px clamp(18px, 5vw, 32px);
+    justify-content: space-between;
+    gap: 14px;
+    background: #090909;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.14);
+    box-shadow: none;
+}
+
+.logo-container h1 {
+    font-size: clamp(1rem, 5vw, 1.22rem);
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    line-height: 1.15;
+    white-space: nowrap;
+}
+
+.brand-accent {
+    color: var(--color-accent);
+}
+
+.admin-link {
+    flex: 0 0 auto;
+    padding: 6px 11px;
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 999px;
+    color: #D7D3C8;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    line-height: 1.2;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: var(--transition);
+}
+
+.admin-link:hover,
+.admin-link:focus-visible {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    outline: none;
+}
+
+.premium-hero {
+    padding: 28px clamp(20px, 5vw, 32px) 25px;
+    background:
+        radial-gradient(ellipse at 88% 18%, rgba(100, 76, 23, 0.25), transparent 38%),
+        linear-gradient(145deg, #111111, #090909 78%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.025);
+}
+
+.hero-eyebrow {
+    color: var(--color-accent);
+    font-size: 0.64rem;
+    font-weight: 750;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.premium-hero h2 {
+    max-width: 620px;
+    margin: 11px 0 9px;
+    color: var(--color-text-primary);
+    font-size: clamp(2rem, 8vw, 2.35rem);
+    font-weight: 760;
+    letter-spacing: -0.045em;
+    line-height: 1.06;
+}
+
+.hero-subtitle {
+    color: var(--color-text-secondary);
+    font-size: 0.88rem;
+    line-height: 1.45;
+}
+
+.services-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 21px clamp(16px, 4.5vw, 24px) 30px;
+    animation: fadeIn 0.7s ease-out;
+}
+
+.services-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 3px 13px;
+}
+
+.services-heading h2 {
+    color: var(--color-text-primary);
+    font-size: 1.12rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+.services-heading span {
+    color: #858585;
+    font-size: 0.62rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.service-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.service-card {
+    min-width: 0;
+    min-height: 82px;
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+        "icon title price"
+        "icon description price";
+    align-items: center;
+    gap: 2px 12px;
+    padding: 13px 14px;
+    border: 1px solid #2B2B2B;
+    border-radius: 15px;
+    background: linear-gradient(120deg, #171717, #111111);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.24);
+    text-align: left;
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, opacity 0.45s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(212, 175, 55, 0.34);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+.service-card:active {
+    transform: scale(0.99);
+}
+
+.service-icon {
+    grid-area: icon;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    margin: 0;
+    border-radius: 12px;
+    background: #292111;
+    color: var(--color-accent);
+    font-size: 1.35rem;
+    transition: transform 0.22s ease, color 0.22s ease;
+}
+
+.service-icon span {
+    display: inline-block;
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.service-title {
+    grid-area: title;
+    align-self: end;
+    margin: 0;
+    color: var(--color-text-primary);
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.service-description {
+    grid-area: description;
+    align-self: start;
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.72rem;
+    line-height: 1.35;
+}
+
+.service-price {
+    grid-area: price;
+    justify-self: end;
+    margin-left: 5px;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    color: var(--color-accent);
+    font-size: 0.82rem;
+    font-weight: 750;
+    line-height: 1.2;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.service-card::before,
+.service-card::after {
+    pointer-events: none;
+}
+
+.footer {
+    background: #090909;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    color: #777777;
+}
+
+@media (max-width: 380px) {
+    .header {
+        min-height: 62px;
+        padding-inline: 14px;
+    }
+
+    .logo-container h1 {
+        font-size: clamp(0.9rem, 4.7vw, 1.05rem);
+        letter-spacing: 0.12em;
+    }
+
+    .admin-link {
+        padding: 6px 9px;
+        font-size: 0.62rem;
+    }
+
+    .service-card {
+        grid-template-columns: 36px minmax(0, 1fr) auto;
+        gap: 2px 9px;
+        padding: 12px 10px;
+    }
+
+    .service-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .service-price {
+        font-size: 0.75rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .header {
+        padding-inline: max(28px, calc((100vw - 1040px) / 2));
+    }
+
+    .premium-hero {
+        padding: 38px max(28px, calc((100vw - 1040px) / 2)) 34px;
+    }
+
+    .premium-hero h2 {
+        font-size: 2.7rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .header,
+    .premium-hero,
+    .services-container,
+    .service-card {
+        animation: none;
+        transition-duration: 0.01ms;
+    }
+
+    .service-card {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+
+@media (max-width: 767px) {
+    .services-container {
+        flex: 0 0 auto;
+    }
+
+    .footer {
+        display: none;
+    }
+}
+
+
+.service-hint {
+    margin: 13px 3px 0;
+    color: #777777;
+    font-size: 0.7rem;
+}
